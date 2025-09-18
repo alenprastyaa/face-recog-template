@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Absensi Karyawan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .card h2 {
+        color: #4a5568;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      #videoElement {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .face-overlay {
+        position: absolute;
+        border: 3px solid #10b981;
+        border-radius: 5px;
+        background: rgba(16, 185, 129, 0.1);
+        pointer-events: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      }
+
+      .face-overlay::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 7px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .controls {
+        margin: 20px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-success {
+        background: linear-gradient(45deg, #10b981, #059669);
+        color: white;
+      }
+
+      .btn-danger {
+        background: linear-gradient(45deg, #ef4444, #dc2626);
+        color: white;
+      }
+
+      .btn-warning {
+        background: linear-gradient(45deg, #f59e0b, #d97706);
+        color: white;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .status {
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-weight: 600;
+      }
+
+      .status.success {
+        background: #d1fae5;
+        color: #059669;
+        border: 2px solid #10b981;
+      }
+
+      .status.error {
+        background: #fee2e2;
+        color: #dc2626;
+        border: 2px solid #ef4444;
+      }
+
+      .status.info {
+        background: #dbeafe;
+        color: #2563eb;
+        border: 2px solid #3b82f6;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #4a5568;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .tabs {
+        display: flex;
+        margin-bottom: 20px;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 4px;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 12px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .tab.active {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .employee-info {
+        background: #f7fafc;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .employee-info img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .attendance-log {
+        max-height: 300px;
+        overflow-y: auto;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 15px;
+      }
+
+      .log-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .log-time {
+        font-size: 0.9em;
+        color: #64748b;
+      }
+
+      .face-detection-info {
+        margin-top: 10px;
+        padding: 10px;
+        background: #f0fdf4;
+        border-radius: 6px;
+        border-left: 4px solid #10b981;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-content">
+        <!-- Video Stream Card -->
+        <div class="card">
+          <div class="video-container">
+            <video id="videoElement" autoplay muted></video>
+          </div>
+
+          <div
+            class="face-detection-info"
+            id="faceDetectionInfo"
+            style="display: none"
+          >
+            <div id="faceCount">Wajah terdeteksi: 0</div>
+          </div>
+
+          <div class="controls">
+            <div class="btn-group">
+              <button class="btn btn-primary" id="startCameraBtn">
+                <i class="fas fa-play"></i> Mulai Kamera
+              </button>
+              <button class="btn btn-danger" id="stopCameraBtn" disabled>
+                <i class="fas fa-stop"></i> Stop Kamera
+              </button>
+            </div>
+
+            <div class="btn-group">
+              <button class="btn btn-success" id="checkInBtn" disabled>
+                <i class="fas fa-sign-in-alt"></i> Check In
+              </button>
+              <button class="btn btn-warning" id="checkOutBtn" disabled>
+                <i class="fas fa-sign-out-alt"></i> Check Out
+              </button>
+            </div>
+          </div>
+
+          <div id="attendanceStatus"></div>
+        </div>
+
+        <!-- Registration & Management Card -->
+        <div class="card">
+          <div class="tabs">
+            <div class="tab active" data-tab="register">
+              <i class="fas fa-user-plus"></i> Registrasi
+            </div>
+            <div class="tab" data-tab="employees">
+              <i class="fas fa-users"></i> Karyawan
+            </div>
+          </div>
+
+          <!-- Registration Tab -->
+          <div class="tab-content active" id="register">
+            <form id="registrationForm">
+              <div class="form-group">
+                <label for="employeeId">ID Karyawan:</label>
+                <input
+                  type="text"
+                  id="employeeId"
+                  required
+                  placeholder="Masukkan ID karyawan"
+                />
+              </div>
+              <div class="form-group">
+                <label for="fullname">Nama Lengkap:</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  required
+                  placeholder="Masukkan nama lengkap"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                style="width: 100%"
+                id="registerBtn"
+              >
+                <i class="fas fa-user-plus"></i> Daftar Karyawan
+              </button>
+            </form>
+            <div id="registrationStatus"></div>
+          </div>
+
+          <!-- Employees Tab -->
+          <div class="tab-content" id="employees">
+            <button
+              class="btn btn-primary"
+              id="loadEmployeesBtn"
+              style="width: 100%; margin-bottom: 20px"
+            >
+              <i class="fas fa-sync"></i> Muat Data Karyawan
+            </button>
+            <div id="employeesList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Log Card -->
+    </div>
+
+    <script>
+      class AttendanceSystem {
+        constructor() {
+          this.video = document.getElementById("videoElement");
+          this.stream = null;
+          this.isDetecting = false;
+          this.faceOverlays = [];
+          this.API_BASE = "http://localhost:5959/api";
+          this.init();
+        }
+
+        init() {
+          this.setupEventListeners();
+          this.setupTabs();
+          this.checkServerHealth();
+        }
+
+        setupEventListeners() {
+          document
+            .getElementById("startCameraBtn")
+            .addEventListener("click", () => this.startCamera());
+          document
+            .getElementById("stopCameraBtn")
+            .addEventListener("click", () => this.stopCamera());
+          document
+            .getElementById("checkInBtn")
+            .addEventListener("click", () =>
+              this.performAttendance("check_in")
+            );
+          document
+            .getElementById("checkOutBtn")
+            .addEventListener("click", () =>
+              this.performAttendance("check_out")
+            );
+          document
+            .getElementById("registrationForm")
+            .addEventListener("submit", (e) => this.registerEmployee(e));
+          document
+            .getElementById("loadEmployeesBtn")
+            .addEventListener("click", () => this.loadEmployees());
+          // Handle window resize to recalculate overlays
+          window.addEventListener("resize", () => {
+            if (this.faceOverlays.length > 0) {
+              // Re-trigger face detection to update overlay positions
+              this.clearFaceOverlays();
+            }
+          });
+        }
+
+        setupTabs() {
+          const tabs = document.querySelectorAll(".tab");
+          tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+              const targetTab = tab.getAttribute("data-tab");
+
+              // Remove active class from all tabs and contents
+              document
+                .querySelectorAll(".tab")
+                .forEach((t) => t.classList.remove("active"));
+              document
+                .querySelectorAll(".tab-content")
+                .forEach((c) => c.classList.remove("active"));
+
+              // Add active class to clicked tab and corresponding content
+              tab.classList.add("active");
+              document.getElementById(targetTab).classList.add("active");
+            });
+          });
+        }
+
+        async checkServerHealth() {
+          try {
+            const response = await fetch(`${this.API_BASE}/health`);
+            const result = await response.json();
+            if (result.success) {
+              this.showStatus(
+                "success",
+                `Server aktif. ${result.registered_employees} karyawan terdaftar.`
+              );
+            }
+          } catch (error) {
+            this.showStatus(
+              "error",
+              "Tidak dapat terhubung ke server. Pastikan server berjalan di http://localhost:5959"
+            );
+          }
+        }
+
+        async startCamera() {
+          try {
+            this.stream = await navigator.mediaDevices.getUserMedia({
+              video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                facingMode: "user",
+              },
+            });
+            this.video.srcObject = this.stream;
+
+            // Wait for video to be ready and then start detection
+            this.video.addEventListener("loadedmetadata", () => {
+              console.log(
+                `Video dimensions: ${this.video.videoWidth}x${this.video.videoHeight}`
+              );
+              console.log(
+                `Display dimensions: ${this.video.clientWidth}x${this.video.clientHeight}`
+              );
+            });
+
+            document.getElementById("startCameraBtn").disabled = true;
+            document.getElementById("stopCameraBtn").disabled = false;
+            document.getElementById("checkInBtn").disabled = false;
+            document.getElementById("checkOutBtn").disabled = false;
+
+            // Start face detection after a short delay to ensure video is ready
+            setTimeout(() => {
+              this.startFaceDetection();
+            }, 1000);
+
+            this.showStatus("success", "Kamera berhasil diaktifkan");
+          } catch (error) {
+            this.showStatus(
+              "error",
+              "Gagal mengakses kamera: " + error.message
+            );
+          }
+        }
+
+        stopCamera() {
+          if (this.stream) {
+            this.stream.getTracks().forEach((track) => track.stop());
+            this.video.srcObject = null;
+            this.stream = null;
+          }
+
+          this.isDetecting = false;
+          this.clearFaceOverlays();
+          document.getElementById("faceDetectionInfo").style.display = "none";
+
+          document.getElementById("startCameraBtn").disabled = false;
+          document.getElementById("stopCameraBtn").disabled = true;
+          document.getElementById("checkInBtn").disabled = true;
+          document.getElementById("checkOutBtn").disabled = true;
+
+          this.showStatus("info", "Kamera dihentikan");
+        }
+
+        startFaceDetection() {
+          this.isDetecting = true;
+          this.detectFaces();
+        }
+
+        async detectFaces() {
+          if (!this.isDetecting || !this.stream) return;
+
+          try {
+            const imageData = this.captureFrame();
+            const response = await fetch(`${this.API_BASE}/detect-faces`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ image: imageData }),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+              this.updateFaceOverlays(result.faces, result.image_size);
+              document.getElementById("faceDetectionInfo").style.display =
+                "block";
+              document.getElementById(
+                "faceCount"
+              ).textContent = `Wajah terdeteksi: ${result.count}`;
+            }
+          } catch (error) {
+            console.error("Face detection error:", error);
+          }
+
+          // Continue detection with higher frequency for better responsiveness
+          setTimeout(() => this.detectFaces(), 300);
+        }
+
+        updateFaceOverlays(faces, originalImageSize) {
+          this.clearFaceOverlays();
+
+          if (!faces || faces.length === 0) return;
+
+          // Get the actual displayed video dimensions
+          const videoRect = this.video.getBoundingClientRect();
+          const displayedWidth = this.video.clientWidth;
+          const displayedHeight = this.video.clientHeight;
+
+          // Get the original video dimensions from the stream
+          const originalWidth = originalImageSize
+            ? originalImageSize.width
+            : this.video.videoWidth;
+          const originalHeight = originalImageSize
+            ? originalImageSize.height
+            : this.video.videoHeight;
+
+          // Calculate scaling factors
+          const scaleX = displayedWidth / originalWidth;
+          const scaleY = displayedHeight / originalHeight;
+
+          faces.forEach((face, index) => {
+            const overlay = document.createElement("div");
+            overlay.className = "face-overlay";
+            overlay.id = `face-overlay-${index}`;
+
+            // Scale coordinates to match displayed video size
+            const scaledX = face.x * scaleX;
+            const scaledY = face.y * scaleY;
+            const scaledWidth = face.width * scaleX;
+            const scaledHeight = face.height * scaleY;
+
+            overlay.style.left = scaledX + "px";
+            overlay.style.top = scaledY + "px";
+            overlay.style.width = scaledWidth + "px";
+            overlay.style.height = scaledHeight + "px";
+
+            // Add face number label
+            const label = document.createElement("div");
+            label.style.cssText = `
+                        position: absolute;
+                        top: -25px;
+                        left: 0;
+                        background: rgba(16, 185, 129, 0.9);
+                        color: white;
+                        padding: 2px 8px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        white-space: nowrap;
+                    `;
+            label.textContent = `Face ${index + 1}`;
+            overlay.appendChild(label);
+
+            this.video.parentElement.appendChild(overlay);
+            this.faceOverlays.push(overlay);
+          });
+        }
+
+        clearFaceOverlays() {
+          this.faceOverlays.forEach((overlay) => overlay.remove());
+          this.faceOverlays = [];
+        }
+
+        captureFrame() {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Use the actual video dimensions, not the displayed dimensions
+          const videoWidth = this.video.videoWidth || 640;
+          const videoHeight = this.video.videoHeight || 480;
+
+          canvas.width = videoWidth;
+          canvas.height = videoHeight;
+
+          // Draw the current video frame
+          ctx.drawImage(this.video, 0, 0, videoWidth, videoHeight);
+
+          // Return base64 encoded image
+          return canvas.toDataURL("image/jpeg", 0.8);
+        }
+
+        async performAttendance(eventType) {
+          if (!this.stream) {
+            this.showStatus("error", "Kamera belum diaktifkan");
+            return;
+          }
+
+          const button = document.getElementById(
+            eventType === "check_in" ? "checkInBtn" : "checkOutBtn"
+          );
+          const originalText = button.innerHTML;
+
+          try {
+            button.innerHTML = '<span class="loading"></span> Memproses...';
+            button.disabled = true;
+
+            const imageData = this.captureFrame();
+            const response = await fetch(`${this.API_BASE}/attendance`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                image: imageData,
+                event_type: eventType,
+              }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", result.message);
+              if (result.employee_info) {
+                this.displayEmployeeInfo(
+                  result.employee_info,
+                  result.attendance_info
+                );
+              }
+              // Reload attendance log
+              this.loadTodayAttendance();
+            } else {
+              this.showStatus("error", result.message);
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          } finally {
+            button.innerHTML = originalText;
+            button.disabled = false;
+          }
+        }
+
+        displayEmployeeInfo(employee, attendance) {
+          const infoDiv = document.createElement("div");
+          infoDiv.className = "employee-info";
+          infoDiv.innerHTML = `
+                    <h3>${employee.fullname}</h3>
+                    <p>ID: ${employee.employee_id}</p>
+                    <p>Tanggal: ${attendance.date}</p>
+                    <p>Waktu: ${attendance.time}</p>
+                    <p>Aktivitas: ${
+                      attendance.event_type === "check_in"
+                        ? "Check In"
+                        : "Check Out"
+                    }</p>
+                `;
+
+          // Replace existing employee info if any
+          const existingInfo = document.querySelector(".employee-info");
+          if (existingInfo) {
+            existingInfo.replaceWith(infoDiv);
+          } else {
+            document.getElementById("attendanceStatus").appendChild(infoDiv);
+          }
+        }
+
+        async registerEmployee(e) {
+          e.preventDefault();
+
+          if (!this.stream) {
+            this.showStatus(
+              "error",
+              "Kamera belum diaktifkan untuk mengambil foto",
+              "registrationStatus"
+            );
+            return;
+          }
+
+          const employeeId = document.getElementById("employeeId").value;
+          const fullname = document.getElementById("fullname").value;
+          const button = document.getElementById("registerBtn");
+          const originalText = button.innerHTML;
+
+          try {
+            button.innerHTML = '<span class="loading"></span> Mendaftarkan...';
+            button.disabled = true;
+
+            const imageData = this.captureFrame();
+            const response = await fetch(`${this.API_BASE}/register`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                employee_id: employeeId,
+                fullname: fullname,
+                image: imageData,
+              }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", result.message, "registrationStatus");
+              document.getElementById("registrationForm").reset();
+              this.loadEmployees(); // Reload employee list
+            } else {
+              this.showStatus("error", result.message, "registrationStatus");
+            }
+          } catch (error) {
+            this.showStatus(
+              "error",
+              "Error: " + error.message,
+              "registrationStatus"
+            );
+          } finally {
+            button.innerHTML = originalText;
+            button.disabled = false;
+          }
+        }
+
+        async loadEmployees() {
+          const button = document.getElementById("loadEmployeesBtn");
+          const originalText = button.innerHTML;
+
+          try {
+            button.innerHTML = '<span class="loading"></span> Memuat...';
+            button.disabled = true;
+
+            const response = await fetch(`${this.API_BASE}/employees`);
+            const result = await response.json();
+
+            if (result.success) {
+              this.displayEmployees(result.employees);
+            } else {
+              this.showStatus("error", "Gagal memuat data karyawan");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          } finally {
+            button.innerHTML = originalText;
+            button.disabled = false;
+          }
+        }
+
+        displayEmployees(employees) {
+          const container = document.getElementById("employeesList");
+          if (employees.length === 0) {
+            container.innerHTML =
+              '<p style="text-align: center; color: #64748B;">Belum ada karyawan terdaftar</p>';
+            return;
+          }
+
+          container.innerHTML = employees
+            .map(
+              (emp) => `
+                    <div class="log-item">
+                        <div>
+                            <strong>${emp.fullname}</strong><br>
+                            <small>ID: ${emp.employee_id}</small>
+                        </div>
+                        <div class="log-time">
+                            ${new Date(emp.created_at).toLocaleDateString(
+                              "id-ID"
+                            )}
+                        </div>
+                    </div>
+                `
+            )
+            .join("");
+        }
+
+        async loadTodayAttendance() {
+          const button = document.getElementById("loadTodayAttendanceBtn");
+          const originalText = button.innerHTML;
+
+          try {
+            button.innerHTML = '<span class="loading"></span> Memuat...';
+            button.disabled = true;
+
+            const response = await fetch(`${this.API_BASE}/attendance/daily`);
+            const result = await response.json();
+
+            if (result.success) {
+              this.displayTodayAttendance(result.attendance);
+            } else {
+              this.showStatus("error", "Gagal memuat data absensi");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          } finally {
+            button.innerHTML = originalText;
+            button.disabled = false;
+          }
+        }
+
+        displayTodayAttendance(attendance) {
+          const container = document.getElementById("attendanceLog");
+          if (attendance.length === 0) {
+            container.innerHTML =
+              '<p style="text-align: center; color: #64748B;">Belum ada data absensi hari ini</p>';
+            return;
+          }
+
+          container.innerHTML = attendance
+            .map((att) => {
+              const checkIn = att.check_in_time || "Belum check-in";
+              const checkOut = att.check_out_time || "Belum check-out";
+              const totalHours =
+                att.total_hours > 0 ? `${att.total_hours} jam` : "-";
+              const statusBadge = this.getStatusBadge(att.status);
+
+              return `
+                        <div class="log-item">
+                            <div>
+                                <strong>${att.fullname}</strong><br>
+                                <small>ID: ${att.employee_id}</small><br>
+                                <small>Masuk: ${checkIn} | Keluar: ${checkOut}</small><br>
+                                <small>Total: ${totalHours}</small>
+                            </div>
+                            <div>
+                                ${statusBadge}
+                            </div>
+                        </div>
+                    `;
+            })
+            .join("");
+        }
+
+        getStatusBadge(status) {
+          const badges = {
+            present:
+              '<span style="background: #D1FAE5; color: #059669; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Hadir</span>',
+            partial:
+              '<span style="background: #FEF3C7; color: #D97706; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Partial</span>',
+            absent:
+              '<span style="background: #FEE2E2; color: #DC2626; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Tidak Hadir</span>',
+          };
+          return badges[status] || badges["absent"];
+        }
+
+        showStatus(type, message, elementId = "attendanceStatus") {
+          const element = document.getElementById(elementId);
+          element.innerHTML = `<div class="status ${type}">${message}</div>`;
+
+          if (type === "success") {
+            setTimeout(() => {
+              element.innerHTML = "";
+            }, 5000);
+          }
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        new AttendanceSystem();
+      });
+    </script>
+  </body>
+</html>

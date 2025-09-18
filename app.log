@@ -1,0 +1,86 @@
+2025-09-17 15:40:15,166 - __main__ - INFO - Database Configuration:
+2025-09-17 15:40:15,166 - __main__ - INFO -   DB_HOST: localhost
+2025-09-17 15:40:15,166 - __main__ - INFO -   DB_USER: root
+2025-09-17 15:40:15,166 - __main__ - INFO -   DB_NAME: app_att
+2025-09-17 15:40:15,166 - __main__ - INFO -   DB_PORT: 3306
+2025-09-17 15:40:15,191 - engineio.server - INFO - Server initialized for threading.
+2025-09-17 15:40:15,191 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:15,249 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:15,302 - __main__ - INFO - Database tables created/verified successfully
+2025-09-17 15:40:15,306 - __main__ - INFO - Loaded 0 registered faces with benefits and IDs
+2025-09-17 15:40:15,307 - __main__ - INFO - ==================================================
+2025-09-17 15:40:15,307 - __main__ - INFO - Starting Flask Face Recognition API
+2025-09-17 15:40:15,307 - __main__ - INFO - ==================================================
+2025-09-17 15:40:15,307 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:15,309 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:15,309 - __main__ - INFO - ✓ Database connection successful
+2025-09-17 15:40:15,309 - __main__ - INFO - Flask App running in DEBUG mode.
+2025-09-17 15:40:20,396 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5959
+ * Running on http://192.168.0.109:5959
+2025-09-17 15:40:20,397 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-17 15:40:20,397 - werkzeug - INFO -  * Restarting with stat
+2025-09-17 15:40:21,580 - __main__ - INFO - Database Configuration:
+2025-09-17 15:40:21,580 - __main__ - INFO -   DB_HOST: localhost
+2025-09-17 15:40:21,580 - __main__ - INFO -   DB_USER: root
+2025-09-17 15:40:21,580 - __main__ - INFO -   DB_NAME: app_att
+2025-09-17 15:40:21,580 - __main__ - INFO -   DB_PORT: 3306
+2025-09-17 15:40:21,597 - engineio.server - INFO - Server initialized for threading.
+2025-09-17 15:40:21,598 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:21,607 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:21,611 - __main__ - INFO - Database tables created/verified successfully
+2025-09-17 15:40:21,615 - __main__ - INFO - Loaded 0 registered faces with benefits and IDs
+2025-09-17 15:40:21,615 - __main__ - INFO - ==================================================
+2025-09-17 15:40:21,616 - __main__ - INFO - Starting Flask Face Recognition API
+2025-09-17 15:40:21,616 - __main__ - INFO - ==================================================
+2025-09-17 15:40:21,616 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:21,617 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:21,617 - __main__ - INFO - ✓ Database connection successful
+2025-09-17 15:40:21,617 - __main__ - INFO - Flask App running in DEBUG mode.
+2025-09-17 15:40:21,638 - werkzeug - WARNING -  * Debugger is active!
+2025-09-17 15:40:21,647 - werkzeug - INFO -  * Debugger PIN: 129-280-782
+2025-09-17 15:40:32,773 - werkzeug - INFO -  * Detected change in '/Users/alenprastya/Documents/Python/Flask-Be-PY-17sep/app.py', reloading
+2025-09-17 15:40:32,903 - werkzeug - INFO -  * Restarting with stat
+2025-09-17 15:40:33,990 - __main__ - INFO - Database Configuration:
+2025-09-17 15:40:33,990 - __main__ - INFO -   DB_HOST: localhost
+2025-09-17 15:40:33,990 - __main__ - INFO -   DB_USER: root
+2025-09-17 15:40:33,990 - __main__ - INFO -   DB_NAME: app_att
+2025-09-17 15:40:33,990 - __main__ - INFO -   DB_PORT: 3306
+2025-09-17 15:40:34,007 - engineio.server - INFO - Server initialized for threading.
+2025-09-17 15:40:34,007 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:34,019 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:34,024 - __main__ - INFO - Database tables created/verified successfully
+2025-09-17 15:40:34,027 - __main__ - INFO - Loaded 0 registered faces with benefits and IDs
+2025-09-17 15:40:34,028 - __main__ - INFO - ==================================================
+2025-09-17 15:40:34,028 - __main__ - INFO - Starting Flask Face Recognition API
+2025-09-17 15:40:34,028 - __main__ - INFO - ==================================================
+2025-09-17 15:40:34,028 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:34,030 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:34,030 - __main__ - INFO - ✓ Database connection successful
+2025-09-17 15:40:34,030 - __main__ - INFO - Flask App running in DEBUG mode.
+2025-09-17 15:40:34,057 - werkzeug - WARNING -  * Debugger is active!
+2025-09-17 15:40:34,067 - werkzeug - INFO -  * Debugger PIN: 129-280-782
+2025-09-17 15:40:51,290 - werkzeug - INFO -  * Detected change in '/Users/alenprastya/Documents/Python/Flask-Be-PY-17sep/app.py', reloading
+2025-09-17 15:40:51,413 - werkzeug - INFO -  * Restarting with stat
+2025-09-17 15:40:52,581 - __main__ - INFO - Database Configuration:
+2025-09-17 15:40:52,582 - __main__ - INFO -   DB_HOST: localhost
+2025-09-17 15:40:52,582 - __main__ - INFO -   DB_USER: root
+2025-09-17 15:40:52,582 - __main__ - INFO -   DB_NAME: app_att
+2025-09-17 15:40:52,582 - __main__ - INFO -   DB_PORT: 3306
+2025-09-17 15:40:52,625 - engineio.server - INFO - Server initialized for threading.
+2025-09-17 15:40:52,625 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:52,639 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:52,641 - __main__ - INFO - Database tables created/verified successfully
+2025-09-17 15:40:52,644 - __main__ - INFO - Loaded 0 registered faces with benefits and IDs
+2025-09-17 15:40:52,645 - __main__ - INFO - ==================================================
+2025-09-17 15:40:52,645 - __main__ - INFO - Starting Flask Face Recognition API
+2025-09-17 15:40:52,645 - __main__ - INFO - ==================================================
+2025-09-17 15:40:52,646 - __main__ - INFO - Testing database connection...
+2025-09-17 15:40:52,648 - __main__ - INFO - Database connection successful! MySQL version: 10.4.28-MariaDB
+2025-09-17 15:40:52,648 - __main__ - INFO - ✓ Database connection successful
+2025-09-17 15:40:52,648 - __main__ - INFO - Flask App running in DEBUG mode.
+2025-09-17 15:40:52,676 - werkzeug - WARNING -  * Debugger is active!
+2025-09-17 15:40:52,690 - werkzeug - INFO -  * Debugger PIN: 129-280-782
+2025-09-17 15:44:01,120 - werkzeug - INFO -  * Detected change in '/Users/alenprastya/Documents/Python/Flask-Be-PY-17sep/app.py', reloading
+2025-09-17 15:44:01,446 - werkzeug - INFO -  * Restarting with stat
