@@ -14,7 +14,7 @@
 
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
         color: #333;
       }
@@ -220,7 +220,8 @@
         color: #4a5568;
       }
 
-      .form-group input {
+      .form-group input,
+      .form-group textarea {
         width: 100%;
         padding: 12px;
         border: 2px solid #e2e8f0;
@@ -229,9 +230,27 @@
         transition: border-color 0.3s ease;
       }
 
-      .form-group input:focus {
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
         outline: none;
         border-color: #667eea;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
       }
 
       .tabs {
@@ -312,10 +331,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px;
-        margin-bottom: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
         background: white;
-        border-radius: 6px;
+        border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
 
@@ -331,13 +350,95 @@
         border-radius: 6px;
         border-left: 4px solid #10b981;
       }
+
+      .employee-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #667eea;
+      }
+
+      .employee-card h4 {
+        color: #4a5568;
+        margin-bottom: 8px;
+      }
+
+      .employee-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 0.9em;
+        color: #64748b;
+      }
+
+      .employee-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-small {
+        padding: 6px 12px;
+        font-size: 0.8em;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: black;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1em;
+      }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="header">
+        <h1><i class="fas fa-users"></i> Sistem Absensi Karyawan</h1>
+        <p>Sistem pengelolaan kehadiran berbasis pengenalan wajah</p>
+      </div>
+
       <div class="main-content">
         <!-- Video Stream Card -->
         <div class="card">
+          <h2><i class="fas fa-camera"></i> Kamera & Absensi</h2>
           <div class="video-container">
             <video id="videoElement" autoplay muted></video>
           </div>
@@ -382,29 +483,80 @@
             <div class="tab" data-tab="employees">
               <i class="fas fa-users"></i> Karyawan
             </div>
+            <div class="tab" data-tab="roles">
+              <i class="fas fa-user-tag"></i> Jabatan
+            </div>
           </div>
 
           <!-- Registration Tab -->
           <div class="tab-content active" id="register">
             <form id="registrationForm">
-              <div class="form-group">
-                <label for="employeeId">ID Karyawan:</label>
-                <input
-                  type="text"
-                  id="employeeId"
-                  required
-                  placeholder="Masukkan ID karyawan"
-                />
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="employeeId">ID Karyawan*:</label>
+                  <input
+                    type="text"
+                    id="employeeId"
+                    required
+                    placeholder="Masukkan ID karyawan"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="name">Nama Lengkap*:</label>
+                  <input
+                    type="text"
+                    id="name"
+                    required
+                    placeholder="Masukkan nama lengkap"
+                  />
+                </div>
               </div>
+
               <div class="form-group">
-                <label for="fullname">Nama Lengkap:</label>
-                <input
-                  type="text"
-                  id="fullname"
-                  required
-                  placeholder="Masukkan nama lengkap"
-                />
+                <label for="address">Alamat:</label>
+                <textarea
+                  id="address"
+                  placeholder="Masukkan alamat lengkap"
+                ></textarea>
               </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="dateOfBirth">Tanggal Lahir:</label>
+                  <input type="date" id="dateOfBirth" />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Telepon:</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Masukkan nomor telepon"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email:</label>
+                  <input type="email" id="email" placeholder="Masukkan email" />
+                </div>
+                <div class="form-group">
+                  <label for="basicSalary">Gaji Pokok:</label>
+                  <input
+                    type="number"
+                    id="basicSalary"
+                    placeholder="Masukkan gaji pokok"
+                    min="0"
+                    step="1000"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="roleSelect">Jabatan:</label>
+                <select id="roleSelect" class="form-control"></select>
+              </div>
+
               <button
                 type="submit"
                 class="btn btn-primary"
@@ -419,6 +571,15 @@
 
           <!-- Employees Tab -->
           <div class="tab-content" id="employees">
+            <div class="form-group">
+              <input
+                type="text"
+                class="search-box"
+                id="employeeSearch"
+                placeholder="Cari karyawan berdasarkan nama, ID, atau email..."
+              />
+            </div>
+
             <button
               class="btn btn-primary"
               id="loadEmployeesBtn"
@@ -428,10 +589,90 @@
             </button>
             <div id="employeesList"></div>
           </div>
+
+          <!-- Roles Tab -->
+          <div class="tab-content" id="roles">
+            <form id="roleForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="roleName">Nama Jabatan*:</label>
+                  <input type="text" id="roleName" required placeholder="e.g., Staff, Manager" />
+                </div>
+                <div class="form-group">
+                  <label for="checkInTime">Jam Masuk:</label>
+                  <input type="time" id="checkInTime" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                <i class="fas fa-plus"></i> Tambah Jabatan
+              </button>
+            </form>
+            <div id="roleStatus"></div>
+            <hr style="margin: 20px 0;" />
+            <button class="btn btn-primary" id="loadRolesBtn" style="width: 100%; margin-bottom: 20px">
+              <i class="fas fa-sync"></i> Muat Data Jabatan
+            </button>
+            <div id="rolesList"></div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Attendance Log Card -->
+    <!-- Employee Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2><i class="fas fa-edit"></i> Edit Karyawan</h2>
+        <form id="editEmployeeForm">
+          <input type="hidden" id="editEmployeeId" />
+
+          <div class="form-group">
+            <label for="editName">Nama Lengkap:</label>
+            <input type="text" id="editName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="editAddress">Alamat:</label>
+            <textarea id="editAddress"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editDateOfBirth">Tanggal Lahir:</label>
+              <input type="date" id="editDateOfBirth" />
+            </div>
+            <div class="form-group">
+              <label for="editPhone">Telepon:</label>
+              <input type="tel" id="editPhone" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editEmail">Email:</label>
+              <input type="email" id="editEmail" />
+            </div>
+            <div class="form-group">
+              <label for="editBasicSalary">Gaji Pokok:</label>
+              <input type="number" id="editBasicSalary" min="0" step="1000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editRoleSelect">Jabatan:</label>
+            <select id="editRoleSelect" class="form-control"></select>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Simpan Perubahan
+            </button>
+            <button type="button" class="btn btn-danger" id="cancelEditBtn">
+              <i class="fas fa-times"></i> Batal
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script>
@@ -442,13 +683,16 @@
           this.isDetecting = false;
           this.faceOverlays = [];
           this.API_BASE = "http://localhost:5959/api";
+          this.currentEditEmployeeId = null;
           this.init();
         }
 
         init() {
           this.setupEventListeners();
           this.setupTabs();
+          this.setupModal();
           this.checkServerHealth();
+          this.loadRoles();
         }
 
         setupEventListeners() {
@@ -474,10 +718,24 @@
           document
             .getElementById("loadEmployeesBtn")
             .addEventListener("click", () => this.loadEmployees());
+          document
+            .getElementById("employeeSearch")
+            .addEventListener("input", (e) =>
+              this.searchEmployees(e.target.value)
+            );
+          document
+            .getElementById("editEmployeeForm")
+            .addEventListener("submit", (e) => this.updateEmployee(e));
+          document
+            .getElementById("roleForm")
+            .addEventListener("submit", (e) => this.createRole(e));
+          document
+            .getElementById("loadRolesBtn")
+            .addEventListener("click", () => this.loadRoles());
+
           // Handle window resize to recalculate overlays
           window.addEventListener("resize", () => {
             if (this.faceOverlays.length > 0) {
-              // Re-trigger face detection to update overlay positions
               this.clearFaceOverlays();
             }
           });
@@ -489,7 +747,6 @@
             tab.addEventListener("click", () => {
               const targetTab = tab.getAttribute("data-tab");
 
-              // Remove active class from all tabs and contents
               document
                 .querySelectorAll(".tab")
                 .forEach((t) => t.classList.remove("active"));
@@ -497,10 +754,29 @@
                 .querySelectorAll(".tab-content")
                 .forEach((c) => c.classList.remove("active"));
 
-              // Add active class to clicked tab and corresponding content
               tab.classList.add("active");
               document.getElementById(targetTab).classList.add("active");
             });
+          });
+        }
+
+        setupModal() {
+          const modal = document.getElementById("editModal");
+          const closeBtn = document.querySelector(".close");
+          const cancelBtn = document.getElementById("cancelEditBtn");
+
+          closeBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+          });
+
+          cancelBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+          });
+
+          window.addEventListener("click", (event) => {
+            if (event.target === modal) {
+              modal.style.display = "none";
+            }
           });
         }
 
@@ -533,7 +809,6 @@
             });
             this.video.srcObject = this.stream;
 
-            // Wait for video to be ready and then start detection
             this.video.addEventListener("loadedmetadata", () => {
               console.log(
                 `Video dimensions: ${this.video.videoWidth}x${this.video.videoHeight}`
@@ -548,7 +823,6 @@
             document.getElementById("checkInBtn").disabled = false;
             document.getElementById("checkOutBtn").disabled = false;
 
-            // Start face detection after a short delay to ensure video is ready
             setTimeout(() => {
               this.startFaceDetection();
             }, 1000);
@@ -610,7 +884,6 @@
             console.error("Face detection error:", error);
           }
 
-          // Continue detection with higher frequency for better responsiveness
           setTimeout(() => this.detectFaces(), 300);
         }
 
@@ -619,12 +892,10 @@
 
           if (!faces || faces.length === 0) return;
 
-          // Get the actual displayed video dimensions
           const videoRect = this.video.getBoundingClientRect();
           const displayedWidth = this.video.clientWidth;
           const displayedHeight = this.video.clientHeight;
 
-          // Get the original video dimensions from the stream
           const originalWidth = originalImageSize
             ? originalImageSize.width
             : this.video.videoWidth;
@@ -632,7 +903,6 @@
             ? originalImageSize.height
             : this.video.videoHeight;
 
-          // Calculate scaling factors
           const scaleX = displayedWidth / originalWidth;
           const scaleY = displayedHeight / originalHeight;
 
@@ -641,7 +911,6 @@
             overlay.className = "face-overlay";
             overlay.id = `face-overlay-${index}`;
 
-            // Scale coordinates to match displayed video size
             const scaledX = face.x * scaleX;
             const scaledY = face.y * scaleY;
             const scaledWidth = face.width * scaleX;
@@ -652,7 +921,6 @@
             overlay.style.width = scaledWidth + "px";
             overlay.style.height = scaledHeight + "px";
 
-            // Add face number label
             const label = document.createElement("div");
             label.style.cssText = `
                         position: absolute;
@@ -683,17 +951,14 @@
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
 
-          // Use the actual video dimensions, not the displayed dimensions
           const videoWidth = this.video.videoWidth || 640;
           const videoHeight = this.video.videoHeight || 480;
 
           canvas.width = videoWidth;
           canvas.height = videoHeight;
 
-          // Draw the current video frame
           ctx.drawImage(this.video, 0, 0, videoWidth, videoHeight);
 
-          // Return base64 encoded image
           return canvas.toDataURL("image/jpeg", 0.8);
         }
 
@@ -732,8 +997,6 @@
                   result.attendance_info
                 );
               }
-              // Reload attendance log
-              this.loadTodayAttendance();
             } else {
               this.showStatus("error", result.message);
             }
@@ -749,7 +1012,7 @@
           const infoDiv = document.createElement("div");
           infoDiv.className = "employee-info";
           infoDiv.innerHTML = `
-                    <h3>${employee.fullname}</h3>
+                    <h3>${employee.name}</h3>
                     <p>ID: ${employee.employee_id}</p>
                     <p>Tanggal: ${attendance.date}</p>
                     <p>Waktu: ${attendance.time}</p>
@@ -760,7 +1023,6 @@
                     }</p>
                 `;
 
-          // Replace existing employee info if any
           const existingInfo = document.querySelector(".employee-info");
           if (existingInfo) {
             existingInfo.replaceWith(infoDiv);
@@ -782,7 +1044,14 @@
           }
 
           const employeeId = document.getElementById("employeeId").value;
-          const fullname = document.getElementById("fullname").value;
+          const name = document.getElementById("name").value;
+          const address = document.getElementById("address").value;
+          const dateOfBirth = document.getElementById("dateOfBirth").value;
+          const phone = document.getElementById("phone").value;
+          const email = document.getElementById("email").value;
+          const basicSalary = document.getElementById("basicSalary").value;
+          const roleName = document.getElementById("roleSelect").value;
+
           const button = document.getElementById("registerBtn");
           const originalText = button.innerHTML;
 
@@ -796,8 +1065,14 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 employee_id: employeeId,
-                fullname: fullname,
+                name: name,
+                address: address,
+                date_of_birth: dateOfBirth,
+                phone: phone,
+                email: email,
+                basic_salary: basicSalary ? parseFloat(basicSalary) : null,
                 image: imageData,
+                role_name: roleName,
               }),
             });
 
@@ -806,7 +1081,7 @@
             if (result.success) {
               this.showStatus("success", result.message, "registrationStatus");
               document.getElementById("registrationForm").reset();
-              this.loadEmployees(); // Reload employee list
+              this.loadEmployees();
             } else {
               this.showStatus("error", result.message, "registrationStatus");
             }
@@ -846,6 +1121,30 @@
           }
         }
 
+        async searchEmployees(searchTerm) {
+          if (searchTerm.trim() === "") {
+            this.loadEmployees();
+            return;
+          }
+
+          try {
+            const response = await fetch(
+              `${this.API_BASE}/employees/search?q=${encodeURIComponent(
+                searchTerm
+              )}`
+            );
+            const result = await response.json();
+
+            if (result.success) {
+              this.displayEmployees(result.employees);
+            } else {
+              this.showStatus("error", "Gagal mencari karyawan");
+            }
+          } catch (error) {
+            console.error("Search error:", error);
+          }
+        }
+
         displayEmployees(employees) {
           const container = document.getElementById("employeesList");
           if (employees.length === 0) {
@@ -857,89 +1156,314 @@
           container.innerHTML = employees
             .map(
               (emp) => `
-                    <div class="log-item">
-                        <div>
-                            <strong>${emp.fullname}</strong><br>
-                            <small>ID: ${emp.employee_id}</small>
-                        </div>
-                        <div class="log-time">
-                            ${new Date(emp.created_at).toLocaleDateString(
-                              "id-ID"
-                            )}
-                        </div>
-                    </div>
-                `
+                <div class="employee-card">
+                  <h4>${emp.name}</h4>
+                  <div class="employee-details">
+                    <div><strong>ID:</strong> ${emp.employee_id}</div>
+                    <div><strong>Email:</strong> ${emp.email || "-"}</div>
+                    <div><strong>Telepon:</strong> ${emp.phone || "-"}</div>
+                    <div><strong>Tgl. Lahir:</strong> ${
+                      emp.date_of_birth
+                        ? new Date(emp.date_of_birth).toLocaleDateString(
+                            "id-ID"
+                          )
+                        : "-"
+                    }</div>
+                    <div><strong>Gaji:</strong> ${
+                      emp.basic_salary
+                        ? `Rp ${parseInt(emp.basic_salary).toLocaleString(
+                            "id-ID"
+                          )}`
+                        : "-"
+                    }</div>
+                    <div><strong>Jabatan:</strong> ${emp.role_name || "-"}</div>
+                    <div><strong>Bergabung:</strong> ${new Date(
+                      emp.created_at
+                    ).toLocaleDateString("id-ID")}</div>
+                  </div>
+                  ${
+                    emp.address
+                      ? `<div style="margin-top: 8px;"><strong>Alamat:</strong> ${emp.address}</div>`
+                      : ""
+                  }
+                  <div class="employee-actions">
+                    <button class="btn btn-primary btn-small" onclick="attendanceSystem.editEmployee('${
+                      emp.employee_id
+                    }')">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="attendanceSystem.deleteEmployee('${
+                      emp.employee_id
+                    }')">
+                      <i class="fas fa-trash"></i> Hapus
+                    </button>
+                    <button class="btn btn-success btn-small" onclick="attendanceSystem.viewAttendance('${
+                      emp.employee_id
+                    }')">
+                      <i class="fas fa-chart-line"></i> Absensi
+                    </button>
+                  </div>
+                </div>
+              `
             )
             .join("");
         }
 
-        async loadTodayAttendance() {
-          const button = document.getElementById("loadTodayAttendanceBtn");
-          const originalText = button.innerHTML;
-
+        async editEmployee(employeeId) {
           try {
-            button.innerHTML = '<span class="loading"></span> Memuat...';
-            button.disabled = true;
-
-            const response = await fetch(`${this.API_BASE}/attendance/daily`);
+            const response = await fetch(
+              `${this.API_BASE}/employees/${employeeId}`
+            );
             const result = await response.json();
 
             if (result.success) {
-              this.displayTodayAttendance(result.attendance);
+              const emp = result.employee;
+              this.currentEditEmployeeId = employeeId;
+
+              document.getElementById("editEmployeeId").value = emp.employee_id;
+              document.getElementById("editName").value = emp.name;
+              document.getElementById("editAddress").value = emp.address || "";
+              document.getElementById("editDateOfBirth").value =
+                emp.date_of_birth || "";
+              document.getElementById("editPhone").value = emp.phone || "";
+              document.getElementById("editEmail").value = emp.email || "";
+              document.getElementById("editBasicSalary").value =
+                emp.basic_salary || "";
+              document.getElementById("editRoleSelect").value = emp.role_name || "";
+
+              document.getElementById("editModal").style.display = "block";
             } else {
-              this.showStatus("error", "Gagal memuat data absensi");
+              this.showStatus("error", "Gagal memuat data karyawan");
             }
           } catch (error) {
             this.showStatus("error", "Error: " + error.message);
-          } finally {
-            button.innerHTML = originalText;
-            button.disabled = false;
           }
         }
 
-        displayTodayAttendance(attendance) {
-          const container = document.getElementById("attendanceLog");
-          if (attendance.length === 0) {
-            container.innerHTML =
-              '<p style="text-align: center; color: #64748B;">Belum ada data absensi hari ini</p>';
+        async updateEmployee(e) {
+          e.preventDefault();
+
+          if (!this.currentEditEmployeeId) return;
+
+          const formData = {
+            name: document.getElementById("editName").value,
+            address: document.getElementById("editAddress").value,
+            date_of_birth: document.getElementById("editDateOfBirth").value,
+            phone: document.getElementById("editPhone").value,
+            email: document.getElementById("editEmail").value,
+            basic_salary: document.getElementById("editBasicSalary").value
+              ? parseFloat(document.getElementById("editBasicSalary").value)
+              : null,
+            role_name: document.getElementById("editRoleSelect").value,
+          };
+
+          try {
+            const response = await fetch(
+              `${this.API_BASE}/employees/${this.currentEditEmployeeId}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+              }
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", "Data karyawan berhasil diperbarui");
+              document.getElementById("editModal").style.display = "none";
+              this.loadEmployees();
+            } else {
+              this.showStatus("error", result.message);
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          }
+        }
+
+        async deleteEmployee(employeeId) {
+          if (
+            !confirm(
+              "Apakah Anda yakin ingin menghapus karyawan ini? Semua data absensi akan ikut terhapus."
+            )
+          ) {
             return;
           }
 
-          container.innerHTML = attendance
-            .map((att) => {
-              const checkIn = att.check_in_time || "Belum check-in";
-              const checkOut = att.check_out_time || "Belum check-out";
-              const totalHours =
-                att.total_hours > 0 ? `${att.total_hours} jam` : "-";
-              const statusBadge = this.getStatusBadge(att.status);
+          try {
+            const response = await fetch(
+              `${this.API_BASE}/employees/${employeeId}`,
+              {
+                method: "DELETE",
+              }
+            );
 
-              return `
-                        <div class="log-item">
-                            <div>
-                                <strong>${att.fullname}</strong><br>
-                                <small>ID: ${att.employee_id}</small><br>
-                                <small>Masuk: ${checkIn} | Keluar: ${checkOut}</small><br>
-                                <small>Total: ${totalHours}</small>
-                            </div>
-                            <div>
-                                ${statusBadge}
-                            </div>
-                        </div>
-                    `;
-            })
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", "Karyawan berhasil dihapus");
+              this.loadEmployees();
+            } else {
+              this.showStatus("error", result.message);
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          }
+        }
+
+        async createRole(e) {
+          e.preventDefault();
+          const roleName = document.getElementById("roleName").value;
+          const checkInTime = document.getElementById("checkInTime").value;
+
+          try {
+            const response = await fetch(`${this.API_BASE}/roles`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ 
+                role_name: roleName, 
+                expected_check_in_time: checkInTime ? checkInTime : null 
+              }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", result.message, "roleStatus");
+              document.getElementById("roleForm").reset();
+              this.loadRoles();
+            } else {
+              this.showStatus("error", result.message, "roleStatus");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message, "roleStatus");
+          }
+        }
+
+        async loadRoles() {
+          try {
+            const response = await fetch(`${this.API_BASE}/roles`);
+            const result = await response.json();
+
+            if (result.success) {
+              this.displayRoles(result.roles);
+              this.populateRoleDropdowns(result.roles);
+            } else {
+              this.showStatus("error", "Gagal memuat data jabatan", "roleStatus");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message, "roleStatus");
+          }
+        }
+
+        displayRoles(roles) {
+          const container = document.getElementById("rolesList");
+          if (roles.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #64748B;">Belum ada jabatan terdaftar</p>';
+            return;
+          }
+
+          container.innerHTML = roles
+            .map(
+              (role) => `
+                <div class="employee-card">
+                  <h4>${role.role_name}</h4>
+                  <div class="employee-details">
+                    <div><strong>Jam Masuk:</strong> ${role.expected_check_in_time || "-"}</div>
+                  </div>
+                  <div class="employee-actions">
+                    <button class="btn btn-danger btn-small" onclick="attendanceSystem.deleteRole('${role.role_name}')">
+                      <i class="fas fa-trash"></i> Hapus
+                    </button>
+                  </div>
+                </div>
+              `
+            )
             .join("");
         }
 
-        getStatusBadge(status) {
-          const badges = {
-            present:
-              '<span style="background: #D1FAE5; color: #059669; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Hadir</span>',
-            partial:
-              '<span style="background: #FEF3C7; color: #D97706; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Partial</span>',
-            absent:
-              '<span style="background: #FEE2E2; color: #DC2626; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">Tidak Hadir</span>',
+        async deleteRole(roleName) {
+          if (!confirm(`Apakah Anda yakin ingin menghapus jabatan "${roleName}"?`)) {
+            return;
+          }
+
+          try {
+            const response = await fetch(`${this.API_BASE}/roles/${roleName}`, {
+              method: "DELETE",
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.showStatus("success", "Jabatan berhasil dihapus", "roleStatus");
+              this.loadRoles();
+            } else {
+              this.showStatus("error", result.message, "roleStatus");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message, "roleStatus");
+          }
+        }
+
+        populateRoleDropdowns(roles) {
+          const roleSelect = document.getElementById("roleSelect");
+          const editRoleSelect = document.getElementById("editRoleSelect");
+
+          roleSelect.innerHTML = '<option value="">Pilih Jabatan</option>';
+          editRoleSelect.innerHTML = '<option value="">Pilih Jabatan</option>';
+
+          roles.forEach(role => {
+            const option = document.createElement("option");
+            option.value = role.role_name;
+            option.textContent = role.role_name;
+            roleSelect.appendChild(option.cloneNode(true));
+            editRoleSelect.appendChild(option);
+          });
+        }
+
+        async viewAttendance(employeeId) {
+          try {
+            const response = await fetch(
+              `${this.API_BASE}/attendance/status/${employeeId}`
+            );
+            const result = await response.json();
+
+            if (result.success) {
+              const status = result.status;
+              let statusMessage = `Status Absensi Hari Ini:\n\n`;
+              statusMessage += `Employee ID: ${status.employee_id}\n`;
+              statusMessage += `Tanggal: ${status.date}\n`;
+              statusMessage += `Status: ${this.getStatusText(status.status)}\n`;
+
+              if (status.check_in_time) {
+                statusMessage += `Check In: ${status.check_in_time}\n`;
+              }
+              if (status.check_out_time) {
+                statusMessage += `Check Out: ${status.check_out_time}\n`;
+              }
+              if (status.total_hours > 0) {
+                statusMessage += `Total Jam: ${status.total_hours} jam\n`;
+              }
+
+              statusMessage += `\n${status.message}`;
+
+              alert(statusMessage);
+            } else {
+              this.showStatus("error", "Gagal memuat status absensi");
+            }
+          } catch (error) {
+            this.showStatus("error", "Error: " + error.message);
+          }
+        }
+
+        getStatusText(status) {
+          const statusMap = {
+            present: "Hadir",
+            partial: "Partial",
+            absent: "Tidak Hadir",
+            not_started: "Belum Mulai",
           };
-          return badges[status] || badges["absent"];
+          return statusMap[status] || status;
         }
 
         showStatus(type, message, elementId = "attendanceStatus") {
@@ -953,8 +1477,12 @@
           }
         }
       }
+
+      // Make attendanceSystem globally accessible for onclick handlers
+      let attendanceSystem;
+
       document.addEventListener("DOMContentLoaded", () => {
-        new AttendanceSystem();
+        attendanceSystem = new AttendanceSystem();
       });
     </script>
   </body>
